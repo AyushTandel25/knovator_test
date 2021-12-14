@@ -53,7 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 var index = shapeList.indexOf(e); // return the index of particular shape
                                 if (index != 0) {
                                   setState(() {
-                                    shapeList[index] = shapeList[index - 1]; // replace the with shape which is added before the selected shape
+                                    shapeList[index] = shapeList[index - 1]; // replace with the shape which is added before the selected shape
                                   });
                                 }
                               },
