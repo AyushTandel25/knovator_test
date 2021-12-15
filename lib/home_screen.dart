@@ -11,12 +11,14 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List<Widget> shapeList = [];
   List<String> shapes = [squareShape, circleShape, triangleShape];
+
+  Map<String, Widget> shapeMap = {};
+
+  int count = 0;
 
   @override
   Widget build(BuildContext context) {
-
     // this will return the screen size of the device
     Size size = MediaQuery.of(context).size;
 
@@ -24,7 +26,9 @@ class _HomeScreenState extends State<HomeScreen> {
     Orientation orientation = MediaQuery.of(context).orientation;
 
     // height of bottom shape-buttons container
-    var bottomContainerHeight = orientation==Orientation.portrait ? size.height * 0.07 : size.height * 0.1;
+    var bottomContainerHeight = orientation == Orientation.portrait
+        ? size.height * 0.07
+        : size.height * 0.1;
 
     // height of upper shape container
     var upperContainerHeight =
@@ -46,18 +50,19 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: ListView(
                   children: [
                     Wrap(
-                      children: shapeList
+                      children: shapeMap.entries
                           .map(
                             (e) => InkWell(
                               onTap: () {
-                                var index = shapeList.indexOf(e); // return the index of particular shape
-                                if (index != 0) {
+                                var index = e.key; // return the key of particular shape
+                                if (index != "0") {
                                   setState(() {
-                                    shapeList[index] = shapeList[index - 1]; // replace with the shape which is added before the selected shape
+                                    var newShape = shapeMap["${int.parse(index) - 1}"]; // replace with the shape which is added before the selected shape
+                                    shapeMap[index] = newShape!;
                                   });
                                 }
                               },
-                              child: e,
+                              child: e.value,
                             ),
                           )
                           .toList(),
@@ -80,17 +85,16 @@ class _HomeScreenState extends State<HomeScreen> {
                         shape: e,
                         onClick: () {
                           setState(() {
-                            shapeList.add(
-                              Padding(
-                                padding: const EdgeInsets.all(5.0),
-                                child: SvgPicture.asset(
-                                  e,
-                                  color: Colors.black,
-                                  height: 50.0,
-                                  width: 50.0,
-                                ),
+                            shapeMap['$count'] = Padding(
+                              padding: const EdgeInsets.all(5.0),
+                              child: SvgPicture.asset(
+                                e,
+                                color: Colors.black,
+                                height: 50.0,
+                                width: 50.0,
                               ),
                             );
+                            count++;
                           });
                         },
                       ),
